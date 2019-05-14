@@ -28,7 +28,10 @@ def create():
         name = request.form['name']
         description = request.form['description']
         url = request.form['url']
+        tag_string = request.form['tags']
         error = None
+
+        tags = [x.strip() for x in filter(None, tag_string.split(','))]
 
         if not name:
             error = 'The name is required.'
@@ -42,6 +45,10 @@ def create():
                 ' VALUES (?, ?, ?)',
                 (name, description, url)
             )
+            for tag in tags:
+                db.execute(
+                    'INSERT INTO tag (name) VALUES (?)', (tag,)
+                )
             db.commit()
             return redirect(url_for('index'))
 
@@ -59,6 +66,17 @@ def get_item(id):
         abort(404, "Item {0} doesn't exist.".format(id))
 
     return item
+
+
+def get_all_tags():
+    tags = get_db().execute(
+        'SELECT * FROM tag'
+    ).fetchall()
+
+    if tags is None:
+        abort(404, "No tags.")
+
+    return tags
 
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
@@ -88,6 +106,13 @@ def update(id):
             return redirect(url_for('index'))
 
     return render_template('stocfs/update.html', item=item)
+
+
+@bp.route('/tags')
+def view_tags():
+    tags = [x['name'] for x in get_all_tags()]
+
+    return render_template('stocfs/tags.html', tags=tags)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))

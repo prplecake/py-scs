@@ -15,6 +15,9 @@
         <label for="url">URL</label>
         <input name="url" id="url" value="{{ request.form['url'] or item['url'] }}" />
 
+        <label for="tags">Tags</label>
+        <input name="tags" id="tags" value="{{ request.form['tags'] or item['tags'] }}" />
+
         <input type="submit" value="Save" />
     </form>
     <hr />
