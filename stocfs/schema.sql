@@ -1,0 +1,33 @@
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS item;
+DROP TABLE IF EXISTS tag;
+DROP TABLE IF EXISTS itemtag;
+
+CREATE TABLE user (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
+);
+
+CREATE TABLE item (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    description TEXT,
+    url TEXT
+);
+
+CREATE TABLE tag (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE itemtag (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    item_id INTEGER,
+    tag_id INTEGER,
+    FOREIGN KEY (item_id) REFERENCES item(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
+);
+
+CREATE INDEX itemindex ON itemtag(item_id);
+CREATE INDEX tagindex on itemtag(tag_id);
