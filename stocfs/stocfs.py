@@ -1,5 +1,6 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect,
+    render_template, request, url_for
 )
 from werkzeug.exceptions import abort
 
@@ -8,6 +9,7 @@ from stocfs.db import get_db
 
 
 bp = Blueprint('stocfs', __name__)
+
 
 @bp.route('/')
 def index():
@@ -32,7 +34,7 @@ def create():
             error = 'The name is required.'
 
         if error is not None:
-            falsh(error)
+            flash(error)
         else:
             db = get_db()
             db.execute(
@@ -44,6 +46,7 @@ def create():
             return redirect(url_for('index'))
 
     return render_template('stocfs/create.html')
+
 
 def get_item(id):
     item = get_db().execute(
