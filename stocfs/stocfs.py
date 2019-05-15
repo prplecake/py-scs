@@ -40,14 +40,29 @@ def create():
             flash(error)
         else:
             db = get_db()
-            db.execute(
+            cur = db.cursor()
+            cur.execute(
                 'INSERT INTO item (name, description, url)'
                 ' VALUES (?, ?, ?)',
                 (name, description, url)
             )
+            itemId = cur.lastrowid
+            tag_ids = []
             for tag in tags:
-                db.execute(
-                    'INSERT INTO tag (name) VALUES (?)', (tag,)
+                cur.execute(
+                    'INSERT OR IGNORE INTO tag (name) VALUES (?)', (tag,)
+                )
+                # tag_ids.append(cur.lastrowid)
+                tag_ids.append(cur.execute(
+                    'SELECT id FROM tag WHERE (name) IN (?)',
+                    (tag,)
+                ).fetchone()['id'])
+            print(tag_ids)
+            for tagId in tag_ids:
+                cur.execute(
+                    'INSERT OR IGNORE INTO itemtag (item_id, tag_id)'
+                    ' VALUES (?, ?)',
+                    (itemId, tagId)
                 )
             db.commit()
             return redirect(url_for('index'))
@@ -68,6 +83,22 @@ def get_item(id):
     return item
 
 
+def get_item_tags(item_id):
+    tag_ids = get_db().execute(
+        'SELECT tag_id FROM itemtag WHERE item_id = ?',
+        (item_id,)
+    ).fetchall()
+    tagIds = [x['tag_id'] for x in tag_ids]
+    tags = []
+    for tagId in tagIds:
+        tags.append(get_db().execute(
+            'SELECT * FROM tag WHERE id = ?',
+            (tagId,)
+        ).fetchone()['name'])
+
+    return tags
+
+
 def get_all_tags():
     tags = get_db().execute(
         'SELECT * FROM tag'
@@ -83,11 +114,13 @@ def get_all_tags():
 @login_required
 def update(id):
     item = get_item(id)
+    tags = ', '.join(get_item_tags(id))
 
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
         url = request.form['url']
+        tags = request.form['tags']
         error = None
 
         if not name:
@@ -105,12 +138,19 @@ def update(id):
             db.commit()
             return redirect(url_for('index'))
 
-    return render_template('stocfs/update.html', item=item)
+    return render_template(
+        'stocfs/update.html',
+        item=item, tags=tags
+    )
 
 
 @bp.route('/tags')
-def view_tags():
-    tags = [x['name'] for x in get_all_tags()]
+@bp.route('/tags/<int:id>')
+def view_tagsid(id=None):
+    if id:
+        tags = get_item_tags(id)
+    else:
+        tags = [x['name'] for x in get_all_tags()]
 
     return render_template('stocfs/tags.html', tags=tags)
 
