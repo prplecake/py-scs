@@ -1,8 +1,7 @@
-# stocfs
+# py-scs
 
-A **S**imple **T**ag **O**rganized **C**ontent **F**iltering **S**ystem
-designed for websites with a need to display content through a variety of
-filters.
+py-scs is a Simple Content Server written in Python. The app allows you to
+present content in an unlimited number of ways.
 
 **Resources:**
 
@@ -15,14 +14,18 @@ filters.
 1. Clone repository
 2. Create virtual environment (optional)
 
-    python3 -m virtualenv venv
+```
+python3 -m venv venv
+```
 
 3. Install requirements
 
-    python3 -m pip install -r requirements.txt
+```
+python3 -m pip install -r requirements.txt
+```
 
 4. Happy hacking! :)
 
-[0]:https://git.sr.ht/~mjorgensen/stocfs
-[1]:https://todo.sr.ht/~mjorgensen/stocfs
-[2]:https://man.sr.ht/~mjorgensen/stocfs
+[0]:https://git.sr.ht/~mjorgensen/py-scs
+[1]:https://todo.sr.ht/~mjorgensen/py-scs
+[2]:https://man.sr.ht/~mjorgensen/py-scs

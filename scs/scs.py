@@ -4,11 +4,11 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from stocfs.auth import login_required
-from stocfs.db import get_db
+from scs.auth import login_required
+from scs.db import get_db
 
 
-bp = Blueprint('stocfs', __name__)
+bp = Blueprint('scs', __name__)
 
 
 @bp.route('/')
@@ -18,7 +18,7 @@ def index():
         'SELECT i.id, name, description, url FROM item i'
         ' ORDER BY name ASC'
     ).fetchall()
-    return render_template('stocfs/index.html', data=data)
+    return render_template('scs/index.html', data=data)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -67,7 +67,7 @@ def create():
             db.commit()
             return redirect(url_for('index'))
 
-    return render_template('stocfs/create.html')
+    return render_template('scs/create.html')
 
 
 def get_item(id):
@@ -139,7 +139,7 @@ def update(id):
             return redirect(url_for('index'))
 
     return render_template(
-        'stocfs/update.html',
+        'scs/update.html',
         item=item, tags=tags
     )
 
@@ -152,7 +152,7 @@ def view_tagsid(id=None):
     else:
         tags = [x['name'] for x in get_all_tags()]
 
-    return render_template('stocfs/tags.html', tags=tags)
+    return render_template('scs/tags.html', tags=tags)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
