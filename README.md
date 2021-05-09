@@ -3,12 +3,6 @@
 py-scs is a Simple Content Server written in Python. The app allows you to
 present content in an unlimited number of ways.
 
-**Resources:**
-
-* [Source Code][0]
-* [Issue Tracker][1]
-* [Documentation][2]
-
 ## Getting Started
 
 1. Clone repository
@@ -25,7 +19,3 @@ present content in an unlimited number of ways.
     ```
 
 4. Happy hacking! :)
-
-[0]:https://git.sr.ht/~mjorgensen/py-scs
-[1]:https://todo.sr.ht/~mjorgensen/py-scs
-[2]:https://man.sr.ht/~mjorgensen/py-scs
