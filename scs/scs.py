@@ -46,7 +46,7 @@ def create():
                 ' VALUES (?, ?, ?)',
                 (name, description, url)
             )
-            itemId = cur.lastrowid
+            item_id = cur.lastrowid
             tag_ids = []
             for tag in tags:
                 cur.execute(
@@ -58,11 +58,11 @@ def create():
                     (tag,)
                 ).fetchone()['id'])
             print(tag_ids)
-            for tagId in tag_ids:
+            for tag_id in tag_ids:
                 cur.execute(
                     'INSERT OR IGNORE INTO itemtag (item_id, tag_id)'
                     ' VALUES (?, ?)',
-                    (itemId, tagId)
+                    (item_id, tag_id)
                 )
             db.commit()
             return redirect(url_for('index'))
@@ -88,12 +88,12 @@ def get_item_tags(item_id):
         'SELECT tag_id FROM itemtag WHERE item_id = ?',
         (item_id,)
     ).fetchall()
-    tagIds = [x['tag_id'] for x in tag_ids]
+    tag_ids = [x['tag_id'] for x in tag_ids]
     tags = []
-    for tagId in tagIds:
+    for tag_id in tag_ids:
         tags.append(get_db().execute(
             'SELECT * FROM tag WHERE id = ?',
-            (tagId,)
+            (tag_id,)
         ).fetchone()['name'])
 
     return tags
